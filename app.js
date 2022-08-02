@@ -296,7 +296,7 @@ var cars = [
 
 var arrOptions = [];
 var e = document.getElementById("stageOne");
-var two = document.getElementById("stageTwo")
+var two = document.getElementById("stageTwo");
 
 e.addEventListener("change", function() {
 
@@ -305,7 +305,6 @@ e.addEventListener("change", function() {
         document.getElementById("stageTwo").disabled = true;
         document.getElementById("stageThree").disabled = true;
         document.getElementById("stageFour").disabled = true;
-        document.getElementById("searchbtn").disabled = true;
 
         arrOptions.push("<option selected>Any Make</option>");
         document.getElementById("stageTwo").innerHTML = arrOptions.join();
@@ -321,6 +320,7 @@ e.addEventListener("change", function() {
         document.getElementById("stageTwo").disabled = true;
         document.getElementById("stageThree").disabled = true;
         document.getElementById("stageFour").disabled = false;
+        document.getElementById("searchbtn").disabled = false;
 
         arrOptions.push("<option selected>Honda</option>");
         two.innerHTML = arrOptions.join();
@@ -354,22 +354,145 @@ e.addEventListener("change", function() {
 
         arrOptions = [];
         arrOptions.push("<option selected>Honda</option>");
-    } else {
+    } else if (e.selectedIndex == 2) {
         document.getElementById("stageTwo").disabled = false;
+        document.getElementById("stageThree").disabled = false;
+        document.getElementById("stageFour").disabled = false;
+        document.getElementById("searchbtn").disabled = false;
 
-        arrOptions.push("<option selected>Any Year</option>");
+        // get make
+        arrOptions.push("<option selected>Any Make</option>");
+        for (var i = 0; i < cars.length; i++) {
+
+            arrOptions.push("<option value='" + i + "'>" + cars[i].make + "</option>");
+
+        }
+        document.getElementById("stageTwo").innerHTML = arrOptions.join();
+
+        // get years
+        arrOptions = [];
+        for (var i = 0; i < cars.length; i++) {
+
+            for (var u = 0; u < cars[i].cars.length; u++) {
+
+                arrOptions.push(cars[i].cars[u].year);
+
+            }
+
+        }
+            // make unique list
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = parseInt(arrOptions[i]) 
+
+        }
+        arrOptions = [...new Set(arrOptions)]
+        arrOptions.sort();
+        for (var i = 0; i < arrOptions.length; i++) {
+            if (arrOptions[i] != (new Date().getFullYear() + 1)) arrOptions[i] = "<option value ='" + i + "'>" + arrOptions[i].toString() + "</option>";
+        }
+        arrOptions.unshift("<option selected>Any Year</option>");
+        document.getElementById("stageThree").innerHTML = arrOptions.join();
+
+        // get models
+        arrOptions = [];
+        for (var i = 0; i < cars.length; i++) {
+
+            for (var u = 0; u < cars[i].cars.length; u++) {
+
+                for (var v = 0; v < cars[i].cars[u].models.length; v++) {
+
+                    arrOptions.push(cars[i].cars[u].models[v]);
+
+                }
+
+            }
+
+        }
+
+        arrOptions = [ ...new Set(arrOptions)];
+        arrOptions.sort();
+
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = "<option selected'>" + arrOptions[i] + "</option>"
+
+        }
+        arrOptions.unshift("<option selected>Any Model</option>");
+        document.getElementById("stageFour").innerHTML = arrOptions.join();
+
+        
+        
+    } else {
+
+        document.getElementById("stageTwo").disabled = false;
+        document.getElementById("stageThree").disabled = false;
+        document.getElementById("stageFour").disabled = false;
+        document.getElementById("searchbtn").disabled = false;
+
+        arrOptions.push("<option selected>Any Make</option>");
+
+        for (var i = 0; i < cars.length; i++) {
+
+            arrOptions.push("<option value='" + i + "'>" + cars[i].make + "</option>");
+
+        }
+        document.getElementById("stageTwo").innerHTML = arrOptions.join();
+
+        // get years
+        arrOptions = [];
+
+        for (var i = 0; i < cars.length; i++) {
+
+            for (var u = 0; u < cars[i].cars.length; u++) {
+
+                arrOptions.push(cars[i].cars[u].year);
+
+            }
+
+        }
+            // make unique list
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = parseInt(arrOptions[i]) 
+
+        }
+        arrOptions = [...new Set(arrOptions)]
+        arrOptions.sort();
+
+        for (var i = 0; i < arrOptions.length; i++) {
+            arrOptions[i] = "<option value ='" + i + "'>" + arrOptions[i].toString() + "</option>";
+        }
+
+        arrOptions.unshift("<option selected>Any Year</option>");
         document.getElementById("stageThree").innerHTML = arrOptions.join();
 
         arrOptions = [];
-        arrOptions.push("<option selected>Any Model</option>");
-        document.getElementById("stageFour").innerHTML = arrOptions.join();
-        document.getElementById("stageFour").disabled = true;
-
         for (var i = 0; i < cars.length; i++) {
-            var str = "<option value='" + i + "'>" + cars[i].make + "</option>";
-            arrOptions.push(str);
+
+            for (var u = 0; u < cars[i].cars.length; u++) {
+
+                for (var v = 0; v < cars[i].cars[u].models.length; v++) {
+
+                    arrOptions.push(cars[i].cars[u].models[v]);
+
+                }
+
+            }
+
         }
-        
+
+        arrOptions = [ ...new Set(arrOptions)];
+        arrOptions.sort();
+
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = "<option selected'>" + arrOptions[i] + "</option>"
+
+        }
+        arrOptions.unshift("<option selected>Any Model</option>");
+        document.getElementById("stageFour").innerHTML = arrOptions.join();
+
     }
 
 }) 
@@ -377,20 +500,118 @@ e.addEventListener("change", function() {
 two.addEventListener("change", function() {
 
     arrOptions = [];
-
+    
     if (two.selectedIndex > 0) {
 
         document.getElementById("stageThree").disabled = false;
 
-    }else {
         arrOptions.push("<option selected>Any Year</option>");
+        for (var i = 0; i < cars.length; i++) {
+
+            if (cars[i].make == two.options[two.selectedIndex].text) {
+
+                for (var u = 0; u < cars[i].cars.length; u++) {
+
+                    if (cars[i].cars[u].year != (new Date().getFullYear() + 1).toString()) {
+                        arrOptions.push("<option value='" + u + "'>" + cars[i].cars[u].year + "</option>");
+                    }
+
+                }
+
+            }
+
+        }
+        document.getElementById("stageThree").innerHTML = arrOptions.join();
+        
+        arrOptions = [];
+        for (var i = 0; i < cars.length; i++) {
+
+            if (cars[i].make == two.options[two.selectedIndex].text) {
+                alert(two.options[selectedIndex].text)
+                for (var u = 0; u < cars[i].cars.length; u++) {
+
+                    for (var v = 0; v < cars[i].cars[u].models.length; v++) {
+
+                        arrOptions.push(cars[i].cars[u].models[v]);
+
+                    }
+
+                }
+
+            }
+
+        }
+        arrOptions = [ ...new Set(arrOptions)];
+        arrOptions.sort();
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = "<option selected'>" + arrOptions[i] + "</option>"
+
+        }
+        arrOptions.unshift("<option value ='" + (arrOptions.length) + "'>Any Model</option>");
+        document.getElementById("stageFour").innerHTML = arrOptions.join();
+
+    }else {
+        arrOptions = [];
+        for (var i = 0; i < cars.length; i++) {
+
+            for (var u = 0; u < cars[i].cars.length; u++) {
+
+                arrOptions.push(cars[i].cars[u].year);
+
+            }
+
+        }
+            // make unique list
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = parseInt(arrOptions[i]) 
+
+        }
+        arrOptions = [...new Set(arrOptions)]
+        arrOptions.sort();
+        for (var i = 0; i < arrOptions.length; i++) {
+            if (arrOptions[i] != (new Date().getFullYear() + 1)) arrOptions[i] = "<option value ='" + i + "'>" + arrOptions[i].toString() + "</option>";
+        }
+        arrOptions.unshift("<option selected>Any Year</option>");
         document.getElementById("stageThree").innerHTML = arrOptions.join();
 
         arrOptions = [];
-        arrOptions.push("<option selected>Any Model</option>");
+        for (var i = 0; i < cars.length; i++) {
+
+            for (var u = 0; u < cars[i].cars.length; u++) {
+
+                for (var v = 0; v < cars[i].cars[u].models.length; v++) {
+
+                    arrOptions.push(cars[i].cars[u].models[v]);
+
+                }
+
+            }
+
+        }
+
+        arrOptions = [ ...new Set(arrOptions)];
+        arrOptions.sort();
+
+        for (var i = 0; i < arrOptions.length; i++) {
+
+            arrOptions[i] = "<option selected'>" + arrOptions[i] + "</option>"
+
+        }
+        arrOptions.unshift("<option selected>Any Model</option>");
         document.getElementById("stageFour").innerHTML = arrOptions.join();
 
-        document.getElementById("stageThree").disabled = true;
+    }
+
+})
+
+var three = document.getElementById("stageThree")
+three.addEventListener("change", function() {
+
+    if (three.selectedIndex > 0) {
+
+    }else {
 
     }
 
@@ -398,11 +619,7 @@ two.addEventListener("change", function() {
 
 var four = document.getElementById("stageFour")
 four.addEventListener("change", function() {
-    if (four.selectedIndex > 0) {
-        document.getElementById("searchbtn").disabled = false;
-    }else {
-        document.getElementById("searchbtn").disabled = true;
-    }
+
 })
 
 var sbar = document.getElementById("searchbar")
